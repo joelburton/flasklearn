@@ -1,2 +1,5 @@
 flask
 flask-script
+flask-sqlalchemy
+psycopg2
+ipython

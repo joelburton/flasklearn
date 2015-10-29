@@ -7,4 +7,6 @@ class ProdConfig(Config):
 
 
 class DevConfig(Config):
-    pass
+    debug = True
+    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/flasklearn"
