@@ -3,6 +3,9 @@
 
 from flask.ext.sqlalchemy import SQLAlchemy
 
+from .extensions import bcrypt
+
+
 db = SQLAlchemy()
 
 
@@ -18,6 +21,15 @@ class User(db.Model):
     def __repr__(self):
         return "<User {}>".format(self.username)
 
+    def set_password(self, password):
+        """Hash password and set."""
+
+        self.password = bcrypt.generate_password_hash(password)
+
+    def check_password(self, password):
+        """Return True if hashes correctly."""
+
+        return bcrypt.check_password_hash(self.password, password)
 
 tags = db.Table("post_tags",
                 db.Column("post_id", db.Integer, db.ForeignKey("post.id")),

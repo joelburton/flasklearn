@@ -2,9 +2,11 @@
 
 from flask import Flask, redirect, url_for
 
+from blogapp.controllers.main import main_blueprint
 from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
 from .models import db
+from .extensions import bcrypt
 
 
 def create_app(object_name):
@@ -17,6 +19,7 @@ def create_app(object_name):
     app.config.from_object(object_name)
 
     db.init_app(app)
+    bcrypt.init_app(app)
 
     @app.route('/')
     def main_home():
@@ -24,5 +27,6 @@ def create_app(object_name):
 
     app.register_blueprint(blog_blueprint)
     app.register_blueprint(play_blueprint)
+    app.register_blueprint(main_blueprint)
 
     return app

@@ -1,11 +1,11 @@
 """Views specific to blog application."""
 
 import datetime
-from flask import Blueprint, request, redirect
+from flask import Blueprint, request, redirect, url_for
 from flask import render_template
 
-from blogapp.forms import CommentForm
-from blogapp.models import Post, Tag, tags, Comment
+from blogapp.forms import CommentForm, PostForm
+from blogapp.models import Post, Tag, tags, Comment, User
 from blogapp.models import db
 
 
@@ -116,3 +116,44 @@ def user(username):
         recent=recent,
         top_tags=top_tags
     )
+
+
+@blog_blueprint.route('/new', methods=['GET', 'POST'])
+def new_post():
+    """Make new blog post."""
+
+    form = PostForm()
+
+    if form.validate_on_submit():
+        new_post = Post(
+            title=form.title.data,
+            text=form.text.data,
+            publish_date=datetime.datetime.now(),
+        )
+
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('.home'))
+
+    return render_template('new.html', form=form)
+
+
+@blog_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit_post(id):
+    """Edit existing blog post."""
+
+    post = Post.query.get_or_404(id)
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.text = form.text.data
+        post.publish_date = datetime.datetime.now()
+
+        db.session.commit()
+
+        return redirect(url_for('.post', post_id=post.id))
+
+    form.text.data = post.text
+
+    return render_template('edit.html', form=form, post=post)

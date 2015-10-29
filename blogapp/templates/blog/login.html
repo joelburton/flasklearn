@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <form method="POST" action="{{ url_for('.login') }}">
+        {{ form.hidden_tag() }}
+
+        {% for field in form %}
+
+          {% if field.name != 'csrf_token' %}
+            <div class="form-group">
+              {{ field.label }}
+              {% if field.errors %}
+                {% for e in field.errors %}
+                  <p class="help-block">{{ e }}</p>
+                {% endfor %}
+              {% endif %}
+              {{ field(class_='form-control') }}
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        <input class="btn btn-primary" type="submit" value="Log In">
+      </form>
+
+{% endblock %}

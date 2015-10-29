@@ -2,7 +2,10 @@
 
 
 class Config(object):
-    pass
+    """Base configuration."""
+
+    RECAPTCHA_PUBLIC_KEY="6LfZ6g8TAAAAAD6_hj6otG-A5UHK-g2A1hUXSIMU"
+    RECAPTCHA_PRIVATE_KEY="6LfZ6g8TAAAAANxemwLq2YQ6vXdGerLNjHPSiMVe"
 
 
 class ProdConfig(Config):

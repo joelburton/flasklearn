@@ -36,6 +36,14 @@
 {% endmacro %}
 
 
+{% macro input(name, label, value='', type='text') %}
+    <div class="form-group">
+        <label for="{{ name }}">{{ label }}</label>
+        <input type="{{ type }}" name="{{ name }}" value="{{ value | escape }}" class="form-control">
+    </div>
+{% endmacro %}
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,12 +62,28 @@
 
     <p>Welcome to the blog!</p>
   </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
   {% block body %}
   {% endblock %}
 </div>
 
 <script src="https://code.jquery.code/jquery.min.js">></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">></script>
+
+{% block js %}{% endblock %}
 
 </body>
 </html>
