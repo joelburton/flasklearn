@@ -1,3 +1,6 @@
+"""Models for blog application."""
+
+
 from flask.ext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -49,6 +52,8 @@ class Tag(db.Model):
 
 
 class Comment(db.Model):
+    """Comments for blog posts."""
+
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(255))
     text = db.Column(db.Text())

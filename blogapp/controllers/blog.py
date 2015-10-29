@@ -1,3 +1,5 @@
+"""Views specific to blog application."""
+
 import datetime
 from flask import Blueprint, request, redirect
 from flask import render_template

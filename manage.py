@@ -1,8 +1,15 @@
+import os
+
 from flask.ext.script import Manager, Server
 from flask.ext.migrate import Migrate, MigrateCommand
 
-from blogapp import app
+from blogapp import create_app
 from blogapp.models import db, User, Post, Comment, Tag
+
+
+# default to dev config
+env = os.environ.get('WEBAPP_ENV', 'dev')
+app = create_app('blogapp.config.%sConfig' % env.capitalize())
 
 migrate = Migrate(app, db)
 

@@ -1,3 +1,6 @@
+"""Views specific to 'other' blueprint."""
+
+
 from flask import render_template, session, Blueprint, abort, g
 from flask.views import View
 
@@ -21,6 +24,8 @@ def before_request():
 
 @play_blueprint.route('/restricted')
 def admin():
+    """Demo of a view that needs security."""
+
     if g.user is None:
         abort(403)
     return render_template('admin.html')
@@ -28,6 +33,8 @@ def admin():
 
 @play_blueprint.errorhandler(403)
 def forbidden(error):
+    """Demo of an error page."""
+
     return render_template("forbidden.html"), 403
 
 
