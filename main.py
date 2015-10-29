@@ -1,12 +1,12 @@
 import datetime
-from flask_wtf import Form
 
-from flask import Flask, render_template
+from flask.views import View
+from flask_wtf import Form
+from flask import Flask, render_template, request, redirect, session, g, abort, Blueprint, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from wtforms import StringField, TextAreaField
 from wtforms.validators import DataRequired
 from wtforms.validators import Length
-
 from config import DevConfig
 
 app = Flask(__name__)
@@ -96,8 +96,21 @@ class CommentForm(Form):
     text = TextAreaField(u'Comment', validators=[DataRequired()])
 
 
+blog_blueprint = Blueprint(
+    'blog',
+    __name__,
+    template_folder='templates/blog',
+    url_prefix='/blog',
+)
+
+
 @app.route('/')
-@app.route('/<int:page>')
+def main_home():
+    return redirect(url_for('blog.home'))
+
+
+@blog_blueprint.route('/')
+@blog_blueprint.route('/<int:page>')
 def home(page=1):
     """Homepage. Lists posts."""
 
@@ -112,12 +125,14 @@ def home(page=1):
     )
 
 
-@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+@blog_blueprint.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
     """Post detail page."""
 
     form = CommentForm()
+
     if form.validate_on_submit():
+        # If valid form is submitted, add comment and redirect back to page
         new_comment = Comment()
         new_comment.name = form.name.data
         new_comment.text = form.text.data
@@ -126,24 +141,27 @@ def post(post_id):
 
         db.session.add(new_comment)
         db.session.commit()
+        return redirect(request.url)
 
-    post = Post.query.get_or_404(post_id)
-    tags = post.tags
-    comments = post.comments.order_by(Comment.date.desc()).all()
-    recent, top_tags = sidebar_data()
+    else:
+        # No form submitted or form is invalid, show post (with errors if appropriate)
+        post = Post.query.get_or_404(post_id)
+        tags = post.tags
+        comments = post.comments.order_by(Comment.date.desc()).all()
+        recent, top_tags = sidebar_data()
 
-    return render_template(
-        'post.html',
-        post=post,
-        tags=tags,
-        comments=comments,
-        recent=recent,
-        top_tags=top_tags,
-        form=form,
-    )
+        return render_template(
+            'post.html',
+            post=post,
+            tags=tags,
+            comments=comments,
+            recent=recent,
+            top_tags=top_tags,
+            form=form,
+        )
 
 
-@app.route('/tag/<string:tag_name>')
+@blog_blueprint.route('/tag/<string:tag_name>')
 def tag(tag_name):
     """Tag detail page."""
 
@@ -160,7 +178,7 @@ def tag(tag_name):
     )
 
 
-@app.route('/user/<string:username>')
+@blog_blueprint.route('/user/<string:username>')
 def user(username):
     """User detail page."""
 
@@ -175,6 +193,43 @@ def user(username):
         top_tags=top_tags
     )
 
+
+@app.before_request
+def before_request():
+    """Add user to g if logged in."""
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+    else:
+        g.user = None
+
+
+@app.route('/restricted')
+def admin():
+    if g.user is None:
+        abort(403)
+    return render_template('admin.html')
+
+
+@app.errorhandler(403)
+def forbidden(error):
+    return render_template("forbidden.html"), 403
+
+
+class GenericView(View):
+    """Generic template view."""
+
+    def __init__(self, template):
+        self.template = template
+        super(GenericView, self).__init__()
+
+    def dispatch_request(self):
+        return render_template(self.template)
+
+
+app.add_url_rule('/hey', view_func=GenericView.as_view('hey', template='hey.html'))
+
+app.register_blueprint(blog_blueprint)
 
 if __name__ == '__main__':
     app.run()
