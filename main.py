@@ -1,6 +1,5 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
-
 from config import DevConfig
 
 app = Flask(__name__)
@@ -25,6 +24,7 @@ tags = db.Table("post_tags",
                 db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
                 db.Column("tag_id", db.Integer, db.ForeignKey("tag.id"))
                 )
+
 
 class Post(db.Model):
     """Blog post."""
@@ -63,9 +63,88 @@ class Tag(db.Model):
         return "<Tag {}>".format(self.title)
 
 
+def sidebar_data():
+    """Return information needed for sidebars: most recent posts and most popular tags."""
+
+    recent = Post.query.order_by(Post.publish_date.desc()).limit(5).all()
+
+    top_tags = (db.session.query(Tag, db.func.count(tags.c.post_id).label('total'))
+                .join(tags)
+                .group_by(Tag)
+                .order_by('total DESC')
+                .limit(5)
+                .all()
+                )
+
+    return recent, top_tags
+
+
 @app.route('/')
-def home():
-    return "<h1>Hello, world</h1>"
+@app.route('/<int:page>')
+def home(page=1):
+    """Homepage. Lists posts."""
+
+    posts = Post.query.order_by(Post.publish_date.desc()).paginate(page, 10)
+    recent, top_tags = sidebar_data()
+
+    return render_template(
+        'home.html',
+        posts=posts,
+        recent=recent,
+        top_tags=top_tags,
+    )
+
+
+@app.route('/post/<int:post_id>')
+def post(post_id):
+    """Post detail page."""
+
+    post = Post.query.get_or_404(post_id)
+    tags = post.tags
+    comments = post.comments.order_by(Comment.date.desc()).all()
+    recent, top_tags = sidebar_data()
+
+    return render_template(
+        'post.html',
+        post=post,
+        tags=tags,
+        comments=comments,
+        recent=recent,
+        top_tags=top_tags
+    )
+
+
+@app.route('/tag/<string:tag_name>')
+def tag(tag_name):
+    """Tag detail page."""
+
+    tag = Tag.query.filter_by(title=tag_name).first_or_404()
+    posts = tag.posts.order_by(Post.publish_date.desc()).all()
+    recent, top_tags = sidebar_data()
+
+    return render_template(
+        'tag.html',
+        tag=tag,
+        posts=posts,
+        recent=recent,
+        top_tags=top_tags
+    )
+
+
+@app.route('/user/<string:username>')
+def user(username):
+    """User detail page."""
+
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = user.posts.order_by(Post.publish_date.desc()).all()
+    recent, top_tags = sidebar_data()
+    return render_template(
+        'user.html',
+        user=user,
+        posts=posts,
+        recent=recent,
+        top_tags=top_tags
+    )
 
 
 if __name__ == '__main__':
