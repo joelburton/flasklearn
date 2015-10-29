@@ -1,5 +1,12 @@
+import datetime
+from flask_wtf import Form
+
 from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
+from wtforms import StringField, TextAreaField
+from wtforms.validators import DataRequired
+from wtforms.validators import Length
+
 from config import DevConfig
 
 app = Flask(__name__)
@@ -79,6 +86,16 @@ def sidebar_data():
     return recent, top_tags
 
 
+class CommentForm(Form):
+    """Form for submitting comments."""
+
+    name = StringField(
+        'Name',
+        validators=[DataRequired(), Length(max=255)]
+    )
+    text = TextAreaField(u'Comment', validators=[DataRequired()])
+
+
 @app.route('/')
 @app.route('/<int:page>')
 def home(page=1):
@@ -95,9 +112,20 @@ def home(page=1):
     )
 
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
     """Post detail page."""
+
+    form = CommentForm()
+    if form.validate_on_submit():
+        new_comment = Comment()
+        new_comment.name = form.name.data
+        new_comment.text = form.text.data
+        new_comment.post_id = post_id
+        new_comment.date = datetime.datetime.now()
+
+        db.session.add(new_comment)
+        db.session.commit()
 
     post = Post.query.get_or_404(post_id)
     tags = post.tags
@@ -110,7 +138,8 @@ def post(post_id):
         tags=tags,
         comments=comments,
         recent=recent,
-        top_tags=top_tags
+        top_tags=top_tags,
+        form=form,
     )
 
 
