@@ -2,8 +2,7 @@
 
 
 from flask import render_template, session, Blueprint, abort, g
-from flask.views import View
-
+from flask.views import View, MethodView
 from blogapp.models import User
 
 play_blueprint = Blueprint(
@@ -50,3 +49,13 @@ class GenericView(View):
 
 
 play_blueprint.add_url_rule('/hey', view_func=GenericView.as_view('hey', template='hey.html'))
+
+
+class YoView(MethodView):
+    """Demo of a method view."""
+
+    def get(self):
+        return "Yo"
+
+
+play_blueprint.add_url_rule('/yo', view_func=YoView.as_view('yo'))

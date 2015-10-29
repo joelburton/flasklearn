@@ -33,9 +33,9 @@ blog_blueprint = Blueprint(
 )
 
 
-@blog_blueprint.route('/')
+@blog_blueprint.route('/', defaults={'page': 1})
 @blog_blueprint.route('/<int:page>')
-def home(page=1):
+def home(page):
     """Homepage. Lists posts."""
 
     posts = Post.query.order_by(Post.publish_date.desc()).paginate(page, 10)
