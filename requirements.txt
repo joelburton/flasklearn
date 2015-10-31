@@ -6,5 +6,7 @@ flask-wtf
 flask-bcrypt
 flask-openid
 flask-oauth
+flask-login
+flask-principal
 psycopg2
 ipython

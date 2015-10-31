@@ -1,12 +1,15 @@
 """Models for blog application."""
-
-
+from flask.ext.login import AnonymousUserMixin
 from flask.ext.sqlalchemy import SQLAlchemy
-
 from .extensions import bcrypt
 
-
 db = SQLAlchemy()
+
+roles = db.Table(
+    'role_users',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
+)
 
 
 class User(db.Model):
@@ -17,6 +20,8 @@ class User(db.Model):
     password = db.Column(db.String(255))
 
     posts = db.relationship('Post', backref='user', lazy='dynamic')
+
+    roles = db.relationship('Role', secondary=roles, backref=db.backref('users', lazy='dynamic'))
 
     def __repr__(self):
         return "<User {}>".format(self.username)
@@ -30,6 +35,30 @@ class User(db.Model):
         """Return True if hashes correctly."""
 
         return bcrypt.check_password_hash(self.password, password)
+
+    def is_authenticated(self):
+        return not isinstance(self, AnonymousUserMixin)
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return isinstance(self, AnonymousUserMixin)
+
+    def get_id(self):
+        return unicode(self.id)
+
+
+class Role(db.Model):
+    """User roles."""
+
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+    def __repr__(self):
+        return "<Role {}>".format(self.name)
+
 
 tags = db.Table("post_tags",
                 db.Column("post_id", db.Integer, db.ForeignKey("post.id")),

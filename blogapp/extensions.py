@@ -1,11 +1,13 @@
 from flask import flash, url_for, redirect, session
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.login import LoginManager
 from flask.ext.oauth import OAuth
 from flask.ext.openid import OpenID
 
 bcrypt = Bcrypt()
 oid = OpenID()
 oauth = OAuth()
+login_manager = LoginManager()
 
 
 @oid.after_login
@@ -57,3 +59,25 @@ twitter = oauth.remote_app(
 @twitter.tokengetter
 def get_twitter_oauth_token():
     return session.get('twitter_oauth_token')
+
+
+login_manager.login_view = "main.login"
+login_manager.session_protection = "strong"
+login_manager.login_message = "Please login to access this page"
+login_manager.login_message_category = "info"
+
+
+@login_manager.user_loader
+def load_user(userid):
+    """Load user with this ID. Required by login manager."""
+
+    from models import User
+    return User.query.get(userid)
+
+
+from flask.ext.principal import Principal, Permission, RoleNeed
+
+principals = Principal()
+admin_permission = Permission(RoleNeed('admin'))
+poster_permission = Permission(RoleNeed('poster'))
+default_permission = Permission(RoleNeed('default'))

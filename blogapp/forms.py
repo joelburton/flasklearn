@@ -1,7 +1,7 @@
 """Flask forms."""
 
 from flask.ext.wtf import Form, RecaptchaField
-from wtforms import StringField, TextAreaField, PasswordField
+from wtforms import StringField, TextAreaField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, EqualTo, URL
 
 from blogapp.models import User
@@ -26,6 +26,8 @@ class LoginForm(Form):
         ])
 
     password = PasswordField('Password', [DataRequired()])
+
+    remember = BooleanField("Remember Me")
 
     def validate(self):
         check_validate = super(LoginForm, self).validate()

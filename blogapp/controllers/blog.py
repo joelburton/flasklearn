@@ -1,9 +1,14 @@
 """Views specific to blog application."""
 
 import datetime
-from flask import Blueprint, request, redirect, url_for
+from flask import Blueprint, request, redirect, url_for, abort
 from flask import render_template
+from flask.ext.login import login_required
+from flask.ext.principal import Permission
+from flask.ext.principal import UserNeed
 
+
+from blogapp.extensions import poster_permission, admin_permission
 from blogapp.forms import CommentForm, PostForm
 from blogapp.models import Post, Tag, tags, Comment, User
 from blogapp.models import db
@@ -119,6 +124,7 @@ def user(username):
 
 
 @blog_blueprint.route('/new', methods=['GET', 'POST'])
+@login_required
 def new_post():
     """Make new blog post."""
 
@@ -139,21 +145,29 @@ def new_post():
 
 
 @blog_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+@poster_permission.require(http_exception=403)
 def edit_post(id):
     """Edit existing blog post."""
 
     post = Post.query.get_or_404(id)
-    form = PostForm()
+    permission = Permission(UserNeed(post.user.id))
 
-    if form.validate_on_submit():
-        post.title = form.title.data
-        post.text = form.text.data
-        post.publish_date = datetime.datetime.now()
+    if permission.can() or admin_permission.can():
 
-        db.session.commit()
+        form = PostForm()
 
-        return redirect(url_for('.post', post_id=post.id))
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.text = form.text.data
+            post.publish_date = datetime.datetime.now()
 
-    form.text.data = post.text
+            db.session.commit()
 
-    return render_template('edit.html', form=form, post=post)
+            return redirect(url_for('.post', post_id=post.id))
+
+        form.text.data = post.text
+
+        return render_template('edit.html', form=form, post=post)
+
+    abort(403)

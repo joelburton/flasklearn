@@ -1,6 +1,9 @@
 """Main routes."""
 
-from flask import Blueprint, url_for, redirect, flash, render_template, request, session
+from flask import Blueprint, url_for, redirect, flash, render_template, request, session, \
+    current_app
+from flask.ext.login import login_user, logout_user
+from flask.ext.principal import Identity, identity_changed, AnonymousIdentity
 
 from blogapp.extensions import oid, facebook, twitter
 from blogapp.forms import LoginForm, RegisterForm, OpenIDForm
@@ -36,6 +39,9 @@ def login():
         )
 
     if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).one()
+        login_user(user, remember=form.remember.data)
+        identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
         flash("You have been logged in.", category="success")
         return redirect(url_for('blog.home'))
 
@@ -50,8 +56,10 @@ def login():
 def logout():
     """Handle logout."""
 
+    logout_user()
+    identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
     flash("You have been logged out.", category="success")
-    return redirect(url_for('.home'))
+    return redirect(url_for('blog.home'))
 
 
 @main_blueprint.route('/register', methods=['GET', 'POST'])
