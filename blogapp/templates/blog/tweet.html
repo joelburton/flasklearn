@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1>{{ tweet.title }}</h1>
+
+<p>{{ tweet.text }}</p>
+
+<p>Categorized as {{ tweet.category }} on {{ tweet.publish_date }}.</p>
+
+  <ul>
+  {% for comment in tweet.comments %}
+    <li>{{ comment.text }} by {{ comment.name }}</li>
+  {% endfor %}
+  </ul>
+
+{% endblock %}

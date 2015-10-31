@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <h1>Tweets</h1>
+
+  <ul>
+    {% for tweet in tweet_list %}
+      <li><a href="{{ tweet.absolute_url() }}">{{ tweet.title }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

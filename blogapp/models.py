@@ -1,8 +1,9 @@
 """Models for blog application."""
+import datetime
 from flask import url_for
 from flask.ext.login import AnonymousUserMixin, UserMixin
 from flask.ext.sqlalchemy import SQLAlchemy
-from .extensions import bcrypt
+from .extensions import bcrypt, mongo
 
 db = SQLAlchemy()
 
@@ -111,3 +112,36 @@ class Comment(db.Model):
 
     def __repr__(self):
         return "<Comment {}>".format(self.text[:15])
+
+
+class TweetComment(mongo.EmbeddedDocument):
+    """Tweet comment."""
+
+    name = mongo.StringField()
+    text = mongo.StringField(required=True)
+
+    def __repr__(self):
+        return "TweetComment {}>".format(self.text[:15])
+
+
+class Tweet(mongo.Document):
+    """A tweet."""
+
+    title = mongo.StringField(required=True, unique=True)
+    text = mongo.StringField()
+    category = mongo.StringField(choices=["Apple", "Berry", "Cherry"])
+    publish_date = mongo.DateTimeField(default=datetime.datetime.now())
+    comments = mongo.ListField(mongo.EmbeddedDocumentField(TweetComment))
+
+    meta = {
+        'indexes': [
+            'title',
+        ],
+        'ordering': ['-publish_date']
+    }
+
+    def __repr__(self):
+        return "<Tweet {}>".format(self.title)
+
+    def absolute_url(self):
+        return url_for('.tweet_show', id=self.id)

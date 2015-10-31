@@ -10,7 +10,7 @@ from flask.ext.principal import UserNeed
 
 from blogapp.extensions import poster_permission, admin_permission
 from blogapp.forms import CommentForm, PostForm
-from blogapp.models import Post, Tag, tags, Comment, User
+from blogapp.models import Post, Tag, tags, Comment, User, Tweet
 from blogapp.models import db
 
 
@@ -171,3 +171,17 @@ def edit_post(id):
         return render_template('edit.html', form=form, post=post)
 
     abort(403)
+
+
+@blog_blueprint.route('/tweets')
+def tweet_list():
+    """List tweets."""
+
+    return render_template("tweets.html", tweet_list=Tweet.objects.all())
+
+
+@blog_blueprint.route('/tweets/<string:id>')
+def tweet_show(id):
+    """Show tweet."""
+
+    return render_template("tweet.html", tweet=Tweet.objects(id=id).get())

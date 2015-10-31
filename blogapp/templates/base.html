@@ -77,6 +77,9 @@
         <li class="active">
           <a href="{{ url_for('blog.home') }}">Blog <span class="sr-only">(current)</span></a>
         </li>
+        <li>
+          <a href="{{ url_for('blog.tweet_list') }}">Tweets</a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_anonymous %}

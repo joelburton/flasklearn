@@ -9,5 +9,6 @@ flask-oauth
 flask-login
 flask-principal
 flask-debugtoolbar
+flask-mongoengine
 psycopg2
 ipython

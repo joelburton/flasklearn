@@ -1,6 +1,7 @@
 from flask import flash, url_for, redirect, session
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.login import LoginManager
+from flask.ext.mongoengine import MongoEngine
 from flask.ext.oauth import OAuth
 from flask.ext.openid import OpenID
 from flask_debugtoolbar import DebugToolbarExtension
@@ -10,6 +11,7 @@ oid = OpenID()
 oauth = OAuth()
 login_manager = LoginManager()
 debug_toolbar = DebugToolbarExtension()
+mongo = MongoEngine()
 
 
 @oid.after_login
