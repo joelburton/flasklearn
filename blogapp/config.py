@@ -55,3 +55,5 @@ class DevConfig(Config):
             'args': ("Message",)
         },
     }
+
+    CACHE_TYPE = 'simple'

@@ -7,6 +7,7 @@ from flask.ext.oauth import OAuth
 from flask.ext.openid import OpenID
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.restful import Api
+from flask.ext.cache import Cache
 
 bcrypt = Bcrypt()
 oid = OpenID()
@@ -16,6 +17,7 @@ debug_toolbar = DebugToolbarExtension()
 mongo = MongoEngine()
 rest_api = Api()
 celery = Celery()
+cache = Cache()
 
 
 @oid.after_login

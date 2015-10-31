@@ -12,6 +12,7 @@ flask-debugtoolbar
 flask-mongoengine
 flask-restful
 flask-celery-helper
+flask-cache
 celery
 flower
 psycopg2

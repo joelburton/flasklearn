@@ -8,12 +8,13 @@ from flask.ext.principal import Permission
 from flask.ext.principal import UserNeed
 
 
-from blogapp.extensions import poster_permission, admin_permission
+from blogapp.extensions import poster_permission, admin_permission, cache
 from blogapp.forms import CommentForm, PostForm
 from blogapp.models import Post, Tag, tags, Comment, User, Tweet
 from blogapp.models import db
 
 
+@cache.cached(timeout=7200, key_prefix='sidebar_data')
 def sidebar_data():
     """Return information needed for sidebars: most recent posts and most popular tags."""
 
@@ -40,6 +41,7 @@ blog_blueprint = Blueprint(
 
 @blog_blueprint.route('/', defaults={'page': 1})
 @blog_blueprint.route('/<int:page>')
+@cache.cached(timeout=60)
 def home(page):
     """Homepage. Lists posts."""
 

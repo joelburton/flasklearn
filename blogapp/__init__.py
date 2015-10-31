@@ -12,7 +12,7 @@ from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
 from .models import db, Reminder
 from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar, mongo, rest_api, \
-    celery
+    celery, cache
 from .tasks import on_reminder_save
 
 
@@ -33,6 +33,7 @@ def create_app(object_name):
     debug_toolbar.init_app(app)
     mongo.init_app(app)
     celery.init_app(app)
+    cache.init_app(app)
 
     event.listen(Reminder, 'after_insert', on_reminder_save)
 
