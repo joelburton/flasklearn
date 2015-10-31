@@ -5,6 +5,7 @@ from flask.ext.login import current_user
 from flask.ext.principal import identity_loaded, UserNeed, RoleNeed
 
 from blogapp.controllers.main import main_blueprint
+from blogapp.controllers.rest.auth import AuthApi
 from blogapp.controllers.rest.post import PostApi
 from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
@@ -30,6 +31,7 @@ def create_app(object_name):
     mongo.init_app(app)
 
     rest_api.add_resource(PostApi, '/api/post', '/api/post/<int:post_id>', endpoint='api')
+    rest_api.add_resource(AuthApi, '/api/auth', endpoint='auth_api')
     rest_api.init_app(app)
 
     @identity_loaded.connect_via(app)

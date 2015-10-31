@@ -1,8 +1,11 @@
 """Models for blog application."""
 import datetime
-from flask import url_for
+from flask import url_for, current_app
 from flask.ext.login import AnonymousUserMixin, UserMixin
 from flask.ext.sqlalchemy import SQLAlchemy
+from itsdangerous import SignatureExpired, BadSignature
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
 from .extensions import bcrypt, mongo
 
 db = SQLAlchemy()
@@ -42,6 +45,24 @@ class User(db.Model, UserMixin):
         """Return if user has this role."""
 
         return any(r.name == role_name for r in self.roles)
+
+    @staticmethod
+    def verify_auth_token(token):
+        """Verify API Auth token."""
+
+        s = Serializer(current_app.config['SECRET_KEY'])
+
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            print "EXP", token
+            return None
+        except BadSignature:
+            print "BAD", token
+            return None
+
+        user = User.query.get(data['id'])
+        return user
 
 
 class Role(db.Model):
