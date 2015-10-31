@@ -1,10 +1,11 @@
 import os
 
+import datetime
 from flask.ext.script import Manager, Server
 from flask.ext.migrate import Migrate, MigrateCommand
 
 from blogapp import create_app
-from blogapp.models import db, User, Post, Comment, Tag, Role, Tweet, TweetComment
+from blogapp.models import db, User, Post, Comment, Tag, Role, Tweet, TweetComment, Reminder
 
 # default to dev config
 env = os.environ.get('WEBAPP_ENV', 'dev')
@@ -29,6 +30,8 @@ def make_shell_context():
                 Role=Role,
                 Tweet=Tweet,
                 TweetComment=TweetComment,
+                Reminder=Reminder,
+                now=datetime.datetime.now
                 )
 
 
