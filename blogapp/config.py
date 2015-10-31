@@ -27,3 +27,6 @@ class DevConfig(Config):
         'host': 'localhost',
         'port': 27017
     }
+
+    CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//"
+    CELERY_RESULT_BACKEND = "amqp://guest:guest@localhost:5672//"

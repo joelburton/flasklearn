@@ -11,5 +11,7 @@ flask-principal
 flask-debugtoolbar
 flask-mongoengine
 flask-restful
+flask-celery-helper
+celery
 psycopg2
 ipython

@@ -10,7 +10,8 @@ from blogapp.controllers.rest.post import PostApi
 from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
 from .models import db
-from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar, mongo, rest_api
+from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar, mongo, rest_api, \
+    celery
 
 
 def create_app(object_name):
@@ -29,6 +30,7 @@ def create_app(object_name):
     principals.init_app(app)
     debug_toolbar.init_app(app)
     mongo.init_app(app)
+    celery.init_app(app)
 
     rest_api.add_resource(PostApi, '/api/post', '/api/post/<int:post_id>', endpoint='api')
     rest_api.add_resource(AuthApi, '/api/auth', endpoint='auth_api')

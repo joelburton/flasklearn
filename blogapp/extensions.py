@@ -1,5 +1,6 @@
 from flask import flash, url_for, redirect, session
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.celery import Celery
 from flask.ext.login import LoginManager
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.oauth import OAuth
@@ -14,6 +15,7 @@ login_manager = LoginManager()
 debug_toolbar = DebugToolbarExtension()
 mongo = MongoEngine()
 rest_api = Api()
+celery = Celery()
 
 
 @oid.after_login
