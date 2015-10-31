@@ -13,6 +13,9 @@ flask-mongoengine
 flask-restful
 flask-celery-helper
 flask-cache
+flask-assets
+cssmin
+jsmin
 celery
 flower
 psycopg2

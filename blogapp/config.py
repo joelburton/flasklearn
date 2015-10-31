@@ -57,3 +57,6 @@ class DevConfig(Config):
     }
 
     CACHE_TYPE = 'simple'
+
+    # don't compile flask-assets assets
+    ASSETS_DEBUG = True

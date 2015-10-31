@@ -53,6 +53,9 @@
   <title>{% block title %}Blog{% endblock %}</title>
   <link rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  {% assets "main_css" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+  {% endassets %}
 </head>
 <body>
 
@@ -129,6 +132,10 @@
 
 <script src="https://code.jquery.com/jquery.min.js">></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">></script>
+
+{% assets "main_js" %}
+  <script src="{{ ASSET_URL }}"></script>
+{% endassets %}
 
 {% block js %}{% endblock %}
 

@@ -1,4 +1,5 @@
 from flask import flash, url_for, redirect, session
+from flask.ext.assets import Environment, Bundle
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.celery import Celery
 from flask.ext.login import LoginManager
@@ -18,6 +19,19 @@ mongo = MongoEngine()
 rest_api = Api()
 celery = Celery()
 cache = Cache()
+assets_env = Environment()
+
+main_css = Bundle(
+    'css/site.css',
+    filters='cssmin',
+    output='css/common.css'
+)
+
+main_js = Bundle(
+    'js/site.js',
+    filters='jsmin',
+    output='js/common.js'
+)
 
 
 @oid.after_login
