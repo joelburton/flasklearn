@@ -5,10 +5,11 @@ from flask.ext.login import current_user
 from flask.ext.principal import identity_loaded, UserNeed, RoleNeed
 
 from blogapp.controllers.main import main_blueprint
+from blogapp.controllers.rest.post import PostApi
 from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
 from .models import db
-from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar, mongo
+from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar, mongo, rest_api
 
 
 def create_app(object_name):
@@ -27,6 +28,9 @@ def create_app(object_name):
     principals.init_app(app)
     debug_toolbar.init_app(app)
     mongo.init_app(app)
+
+    rest_api.add_resource(PostApi, '/api/post', '/api/post/<int:post_id>', endpoint='api')
+    rest_api.init_app(app)
 
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):

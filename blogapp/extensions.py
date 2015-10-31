@@ -5,6 +5,7 @@ from flask.ext.mongoengine import MongoEngine
 from flask.ext.oauth import OAuth
 from flask.ext.openid import OpenID
 from flask_debugtoolbar import DebugToolbarExtension
+from flask.ext.restful import Api
 
 bcrypt = Bcrypt()
 oid = OpenID()
@@ -12,6 +13,7 @@ oauth = OAuth()
 login_manager = LoginManager()
 debug_toolbar = DebugToolbarExtension()
 mongo = MongoEngine()
+rest_api = Api()
 
 
 @oid.after_login
