@@ -19,3 +19,5 @@ class DevConfig(Config):
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_DATABASE_URI = "postgresql://localhost/flasklearn"
     SECRET_KEY = 'supersecret'
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False

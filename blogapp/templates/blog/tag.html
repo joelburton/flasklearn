@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <h1>{{ tag.title }}</h1>
+
+  <ul>
+  {% for post in tag.posts %}
+    <li><a href="{{ post.absolute_url() }}">{{ post.title }}</a></li>
+  {% endfor %}
+  </ul>
+
+{% endblock %}

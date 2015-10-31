@@ -8,5 +8,6 @@ flask-openid
 flask-oauth
 flask-login
 flask-principal
+flask-debugtoolbar
 psycopg2
 ipython

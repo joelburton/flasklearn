@@ -1,5 +1,6 @@
 """Models for blog application."""
-from flask.ext.login import AnonymousUserMixin
+from flask import url_for
+from flask.ext.login import AnonymousUserMixin, UserMixin
 from flask.ext.sqlalchemy import SQLAlchemy
 from .extensions import bcrypt
 
@@ -12,7 +13,7 @@ roles = db.Table(
 )
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     """User."""
 
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
@@ -36,17 +37,10 @@ class User(db.Model):
 
         return bcrypt.check_password_hash(self.password, password)
 
-    def is_authenticated(self):
-        return not isinstance(self, AnonymousUserMixin)
+    def has_role(self, role_name):
+        """Return if user has this role."""
 
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return isinstance(self, AnonymousUserMixin)
-
-    def get_id(self):
-        return unicode(self.id)
+        return any(r.name == role_name for r in self.roles)
 
 
 class Role(db.Model):
@@ -81,6 +75,19 @@ class Post(db.Model):
 
     def __repr__(self):
         return "<Post {}>".format(self.title)
+
+    def can_user_edit(self, user):
+        """Can this user edit this post?"""
+
+        return user.is_authenticated and (
+            user.has_role('admin') or
+            unicode(self.user_id) == user.get_id()
+        )
+
+    def absolute_url(self):
+        """Get URL for post."""
+
+        return url_for('blog.post', post_id=self.id)
 
 
 class Tag(db.Model):

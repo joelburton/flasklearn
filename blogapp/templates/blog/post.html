@@ -12,7 +12,9 @@
 
       <div>{{ post.text | safe }}</div>
 
-      <p><a href="{{ url_for('.edit_post', id=post.id) }}" class="btn btn-primary">Edit</a></p>
+      {% if post.can_user_edit(current_user) %}
+        <p><a href="{{ url_for('.edit_post', id=post.id) }}" class="btn btn-primary">Edit</a></p>
+      {% endif %}
 
     </div>
 

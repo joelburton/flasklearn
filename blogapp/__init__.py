@@ -8,7 +8,7 @@ from blogapp.controllers.main import main_blueprint
 from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
 from .models import db
-from .extensions import bcrypt, oid, login_manager, principals
+from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar
 
 
 def create_app(object_name):
@@ -25,6 +25,7 @@ def create_app(object_name):
     oid.init_app(app)
     login_manager.init_app(app)
     principals.init_app(app)
+    debug_toolbar.init_app(app)
 
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):
