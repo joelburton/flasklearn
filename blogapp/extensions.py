@@ -9,6 +9,7 @@ from flask.ext.openid import OpenID
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.restful import Api
 from flask.ext.cache import Cache
+from flask.ext.admin import Admin
 
 bcrypt = Bcrypt()
 oid = OpenID()
@@ -20,6 +21,7 @@ rest_api = Api()
 celery = Celery()
 cache = Cache()
 assets_env = Environment()
+admin = Admin()
 
 main_css = Bundle(
     'css/site.css',

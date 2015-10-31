@@ -14,6 +14,7 @@ flask-restful
 flask-celery-helper
 flask-cache
 flask-assets
+flask-admin
 cssmin
 jsmin
 celery
