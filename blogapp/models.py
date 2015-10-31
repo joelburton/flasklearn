@@ -166,3 +166,15 @@ class Tweet(mongo.Document):
 
     def absolute_url(self):
         return url_for('.tweet_show', id=self.id)
+
+
+class Reminder(db.Model):
+    """Reminder. Used to play with Celery."""
+
+    id = db.Column(db.Integer(), primary_key=True)
+    date = db.Column(db.DateTime())
+    email = db.Column(db.String())
+    text = db.Column(db.Text())
+
+    def __repr__(self):
+        return "<Reminder '{}'>".format(self.text[:20])

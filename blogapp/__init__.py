@@ -3,15 +3,17 @@
 from flask import Flask, redirect, url_for
 from flask.ext.login import current_user
 from flask.ext.principal import identity_loaded, UserNeed, RoleNeed
+from sqlalchemy import event
 
 from blogapp.controllers.main import main_blueprint
 from blogapp.controllers.rest.auth import AuthApi
 from blogapp.controllers.rest.post import PostApi
 from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
-from .models import db
+from .models import db, Reminder
 from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar, mongo, rest_api, \
     celery
+from .tasks import on_reminder_save
 
 
 def create_app(object_name):
@@ -31,6 +33,8 @@ def create_app(object_name):
     debug_toolbar.init_app(app)
     mongo.init_app(app)
     celery.init_app(app)
+
+    event.listen(Reminder, 'after_insert', on_reminder_save)
 
     rest_api.add_resource(PostApi, '/api/post', '/api/post/<int:post_id>', endpoint='api')
     rest_api.add_resource(AuthApi, '/api/auth', endpoint='auth_api')

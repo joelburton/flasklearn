@@ -13,5 +13,6 @@ flask-mongoengine
 flask-restful
 flask-celery-helper
 celery
+flower
 psycopg2
 ipython
