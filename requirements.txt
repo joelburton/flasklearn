@@ -4,5 +4,7 @@ flask-sqlalchemy
 flask-migrate
 flask-wtf
 flask-bcrypt
+flask-openid
+flask-oauth
 psycopg2
 ipython

@@ -6,7 +6,7 @@ from blogapp.controllers.main import main_blueprint
 from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
 from .models import db
-from .extensions import bcrypt
+from .extensions import bcrypt, oid
 
 
 def create_app(object_name):
@@ -20,6 +20,7 @@ def create_app(object_name):
 
     db.init_app(app)
     bcrypt.init_app(app)
+    oid.init_app(app)
 
     @app.route('/')
     def main_home():

@@ -43,6 +43,7 @@ class Post(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     title = db.Column(db.String(255))
     text = db.Column(db.Text())
+    color = db.Column(db.String(255))
     publish_date = db.Column(db.DateTime())
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
 

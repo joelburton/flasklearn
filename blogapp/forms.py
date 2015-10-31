@@ -2,7 +2,7 @@
 
 from flask.ext.wtf import Form, RecaptchaField
 from wtforms import StringField, TextAreaField, PasswordField
-from wtforms.validators import DataRequired, Length, EqualTo
+from wtforms.validators import DataRequired, Length, EqualTo, URL
 
 from blogapp.models import User
 
@@ -101,3 +101,9 @@ class PostForm(Form):
         'Content',
         [DataRequired()]
     )
+
+
+class OpenIDForm(Form):
+    """Open ID login/registration."""
+
+    openid = StringField('OpenID URL', [DataRequired(), URL()])
