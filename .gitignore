@@ -1,0 +1,5 @@
+/mail.sh
+/celerybeat-schedule
+/blogapp/static/css/common.css
+/blogapp/static/js/common.js
+/blogapp/static/.webassets-cache

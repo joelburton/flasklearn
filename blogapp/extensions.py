@@ -10,6 +10,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.restful import Api
 from flask.ext.cache import Cache
 from flask.ext.admin import Admin
+from flask.ext.mail import Mail
 
 bcrypt = Bcrypt()
 oid = OpenID()
@@ -22,6 +23,7 @@ celery = Celery()
 cache = Cache()
 assets_env = Environment()
 admin = Admin()
+mail = Mail()
 
 main_css = Bundle(
     'css/site.css',

@@ -1,6 +1,7 @@
 """Flask application configurations."""
 
 import datetime
+import os
 
 
 class Config(object):
@@ -60,3 +61,8 @@ class DevConfig(Config):
 
     # don't compile flask-assets assets
     ASSETS_DEBUG = True
+
+    MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
+    MAIL_USERNAME = 'AKIAIDQJEDLNTSM73G7A'
+    MAIL_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+    MAIL_USE_TLS = True

@@ -15,6 +15,7 @@ flask-celery-helper
 flask-cache
 flask-assets
 flask-admin
+flask-mail
 cssmin
 jsmin
 celery

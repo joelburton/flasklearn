@@ -1,6 +1,9 @@
 import os
 import time
-from blogapp.extensions import celery
+
+from flask.ext.mail import Message
+
+from blogapp.extensions import celery, mail
 from blogapp.models import Reminder
 
 
@@ -24,22 +27,11 @@ def remind(self, pk):
     reminder = Reminder.query.get(pk)
     msg = MIMEText(reminder.text)
 
-    msg['Subject'] = "Your reminder"
-    msg['From'] = "joel@joelburton.com"
-    msg['To'] = reminder.email
+    msg = Message("Your reminder", sender="joel@joelburton.com", recipients=[reminder.email])
+    msg.body = reminder.text
 
     try:
-        smtp_server = smtplib.SMTP('email-smtp.us-east-1.amazonaws.com')
-        smtp_server.starttls()
-        smtp_server.login('AKIAIDQJEDLNTSM73G7A', os.environ['EMAIL_HOST_PASSWORD'])
-        smtp_server.sendmail(
-            "joel@joelburton.com",
-            [reminder.email],
-            msg.as_string()
-        )
-        smtp_server.close()
-
-        return
+        mail.send(msg)
     except Exception, e:
         self.retry(exc=e)
 
