@@ -14,7 +14,7 @@ from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
 from .models import db, Reminder, Tag, Comment, Post, Role, User
 from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar, mongo, rest_api, \
-    celery, cache, assets_env, main_js, main_css, admin, mail
+    celery, cache, assets_env, main_js, main_css, admin, mail, youtube_ext
 from .tasks import on_reminder_save
 
 
@@ -39,6 +39,7 @@ def create_app(object_name):
     assets_env.init_app(app)
     admin.init_app(app)
     mail.init_app(app)
+    youtube_ext.init_app(app)
 
     assets_env.register("main_js", main_js)
     assets_env.register("main_css", main_css)

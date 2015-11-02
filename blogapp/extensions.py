@@ -12,6 +12,8 @@ from flask.ext.cache import Cache
 from flask.ext.admin import Admin
 from flask.ext.mail import Mail
 
+from flask.ext.youtube import Youtube
+
 bcrypt = Bcrypt()
 oid = OpenID()
 oauth = OAuth()
@@ -24,6 +26,7 @@ cache = Cache()
 assets_env = Environment()
 admin = Admin()
 mail = Mail()
+youtube_ext = Youtube()
 
 main_css = Bundle(
     'css/site.css',
