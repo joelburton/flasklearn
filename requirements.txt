@@ -23,3 +23,4 @@ flower
 psycopg2
 selenium
 ipython
+coverage
