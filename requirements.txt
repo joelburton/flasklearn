@@ -21,4 +21,5 @@ jsmin
 celery
 flower
 psycopg2
+selenium
 ipython

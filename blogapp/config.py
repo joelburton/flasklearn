@@ -2,27 +2,18 @@
 
 import datetime
 import os
+import tempfile
 
 
 class Config(object):
     """Base configuration."""
 
+    SECRET_KEY = 'supersecret'
+
     RECAPTCHA_PUBLIC_KEY = "6LfZ6g8TAAAAAD6_hj6otG-A5UHK-g2A1hUXSIMU"
     RECAPTCHA_PRIVATE_KEY = "6LfZ6g8TAAAAANxemwLq2YQ6vXdGerLNjHPSiMVe"
 
-
-class ProdConfig(Config):
-    pass
-
-
-class DevConfig(Config):
-    """Development configuration."""
-
     DEBUG = True
-    SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/flasklearn"
-    SECRET_KEY = 'supersecret'
-
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     DEBUG_TB_PANELS = [
         'flask_debugtoolbar.panels.versions.VersionDebugPanel',
@@ -38,6 +29,8 @@ class DevConfig(Config):
         'flask_debugtoolbar.panels.sqlalchemy.SQLAlchemyDebugPanel',
     ]
 
+
+    SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MONGODB_SETTINGS = {
@@ -57,12 +50,40 @@ class DevConfig(Config):
         },
     }
 
-    CACHE_TYPE = 'simple'
-
     # don't compile flask-assets assets
     ASSETS_DEBUG = True
 
     MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
     MAIL_USERNAME = 'AKIAIDQJEDLNTSM73G7A'
-    MAIL_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+    MAIL_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'FIXME')
     MAIL_USE_TLS = True
+
+    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/flasklearn"
+
+    CACHE_TYPE = 'simple'
+
+
+class ProdConfig(Config):
+    """Production configuration."""
+
+    ASSETS_DEBUG = False
+    DEBUG = False
+    SQLALCHEMY_ECHO = False
+
+
+class DevConfig(Config):
+    """Development configuration."""
+
+
+class TestConfig(Config):
+    """Testing configuration."""
+
+    db_file = tempfile.NamedTemporaryFile()
+
+    DEBUG_TB_ENABLED = False
+
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + db_file.name
+
+    CACHE_TYPE = 'null'
+    WTF_CSRF_ENABLED = False
+
