@@ -3,3 +3,6 @@
 /blogapp/static/css/common.css
 /blogapp/static/js/common.js
 /blogapp/static/.webassets-cache
+/htmlcov
+.coverage
+*.egg-info/
