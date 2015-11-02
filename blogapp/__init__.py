@@ -14,7 +14,7 @@ from .controllers.blog import blog_blueprint
 from .controllers.play import play_blueprint
 from .models import db, Reminder, Tag, Comment, Post, Role, User
 from .extensions import bcrypt, oid, login_manager, principals, debug_toolbar, mongo, rest_api, \
-    celery, cache, assets_env, main_js, main_css, admin, mail, youtube_ext
+    celery, cache, assets_env, main_js, main_css, admin, mail, youtube_ext, gzip
 from .tasks import on_reminder_save
 
 
@@ -26,6 +26,9 @@ def create_app(object_name):
 
     app = Flask(__name__)
     app.config.from_object(object_name)
+
+    # Must come before debugtoolbar
+    gzip.init_app(app)
 
     admin.init_app(app)
     assets_env.init_app(app)

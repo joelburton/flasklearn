@@ -6,6 +6,7 @@ from flask.ext.bcrypt import Bcrypt
 from flask.ext.cache import Cache
 from flask.ext.celery import Celery
 from flask.ext.debugtoolbar import DebugToolbarExtension
+from flask.ext.gzip import GZip
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 from flask.ext.mongoengine import MongoEngine
@@ -22,6 +23,7 @@ bcrypt = Bcrypt()
 cache = Cache()
 celery = Celery()
 debug_toolbar = DebugToolbarExtension()
+gzip = GZip()
 login_manager = LoginManager()
 mail = Mail()
 mongo = MongoEngine()
