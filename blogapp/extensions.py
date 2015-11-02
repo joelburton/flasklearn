@@ -1,32 +1,34 @@
 from flask import flash, url_for, redirect, session
+
+from flask.ext.admin import Admin
 from flask.ext.assets import Environment, Bundle
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.cache import Cache
 from flask.ext.celery import Celery
+from flask.ext.debugtoolbar import DebugToolbarExtension
 from flask.ext.login import LoginManager
+from flask.ext.mail import Mail
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.oauth import OAuth
 from flask.ext.openid import OpenID
-from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.restful import Api
-from flask.ext.cache import Cache
-from flask.ext.admin import Admin
-from flask.ext.mail import Mail
-
 from flask.ext.youtube import Youtube
 
-bcrypt = Bcrypt()
-oid = OpenID()
-oauth = OAuth()
-login_manager = LoginManager()
-debug_toolbar = DebugToolbarExtension()
-mongo = MongoEngine()
-rest_api = Api()
-celery = Celery()
-cache = Cache()
-assets_env = Environment()
+
 admin = Admin()
+assets_env = Environment()
+bcrypt = Bcrypt()
+cache = Cache()
+celery = Celery()
+debug_toolbar = DebugToolbarExtension()
+login_manager = LoginManager()
 mail = Mail()
+mongo = MongoEngine()
+oauth = OAuth()
+oid = OpenID()
+rest_api = Api()
 youtube_ext = Youtube()
+
 
 main_css = Bundle(
     'css/site.css',
