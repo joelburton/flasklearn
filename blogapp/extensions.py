@@ -11,6 +11,7 @@ from flask.ext.mail import Mail
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.oauth import OAuth
 from flask.ext.openid import OpenID
+from flask.ext.principal import Principal, Permission, RoleNeed
 from flask.ext.restful import Api
 from flask.ext.youtube import Youtube
 
@@ -26,6 +27,7 @@ mail = Mail()
 mongo = MongoEngine()
 oauth = OAuth()
 oid = OpenID()
+principals = Principal()
 rest_api = Api()
 youtube_ext = Youtube()
 
@@ -108,9 +110,7 @@ def load_user(userid):
     return User.query.get(userid)
 
 
-from flask.ext.principal import Principal, Permission, RoleNeed
-
-principals = Principal()
+# Flask-Principal permissions
 admin_permission = Permission(RoleNeed('admin'))
 poster_permission = Permission(RoleNeed('poster'))
 default_permission = Permission(RoleNeed('default'))
